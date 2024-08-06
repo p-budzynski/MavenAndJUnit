@@ -1,0 +1,10 @@
+Stworz klase Employee(name, surname, pesel, salary, position, city)
+Stworz klase EmployeeService w ktorej kazda z metod pobiera liste emplowow jako argument :
+1) zwraca pracowwnika co najwiecej zarabia lub rzuca wyjątek jeżeli takiego nie znajdzie
+2) zwraca pracownika co najwiecej zarabia w podanym jako 2gi argument miescie - lub rzuca wyjatek jesli nie ma zadnego pracownika w danym miescie
+3) zwraca miasto w ktorym jest najwiecej pracownikow
+4) zwraca srednia pensje pracownikow na podanym jako drugi argument stanowisku.
+Testy jednostkowe na wszystko.
+
+Dla chetnych:
+Sprobowac podpiac plugin jacoco, ktory wygeneruje raport o tym ile kodu jest przetestowane

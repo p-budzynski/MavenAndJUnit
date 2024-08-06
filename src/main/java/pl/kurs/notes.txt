@@ -1,0 +1,80 @@
+groupId – odwrócona domena wytwórcy oprogramowania;
+artifactId – nazwa projektu;
+modelVersion – wersja schematu XML naszego pliku;
+packaging – wskazanie do jakiego formatu ma być pakowana aplikacja (JAR, WAR, EAR);
+version – wersja;
+
+
+Komendy Mavena:
+clean - usuwa folder target generowany przez mavena, można to utożsamiać z wyczyszczeniem projektu do stanu pierwotnegom
+validate – waliduje strukturę projektu, sprawdza poprawność pom’a.
+compile - kompiluje wszystkie pliki z kodami źródłowymi i kopiuje je do odpowiednich folderów w wygenerowanym folderze target.
+test – uruchamia testy.
+package - najpierw kompiluje wszystkie pliki z kodami źródłowymi (cel goal), a następnie pakuje aplikację do wskazanego formatu (jar/war/ear) i
+umieszcza plik wynikowy w folderze target. Plik będzie miał domyślnie nazwę identyczną z identyfikatorem naszej aplikacji (artifactId) z doklejoną wersją.
+
+verify – sprawdza poprawność paczki.
+install – instaluje paczkę na lokalnym repozytorium, aby mogła być używana przez inne moduły.
+site  - generuje dokumentację projektu.
+deploy – kopiuje artefakt na firmowy serwer z aplikacjami.
+
+
+Warto tutaj wspomnieć o kilku istotnych rzeczach:
+4 foldery wymienione na górze, np. src/main/java są skrótem do folderu src znajdującego się niżej - zwyczajnie ułatwiają pracę
+foldery z kodami źródłowymi w projektach mavena dzielimy na dwie grupy:
+kod aplikacji (foldery rozpoczynające się od main)
+kod testów (foldery rozpoczynające się od test)
+foldery resources służą do przechowywania plików innych niż kody źródłowe javy takich jak konfiguracje XML, pliki importów SQL, obrazki itp.
+
+
+oprócz biblioteki standardowej Javy (JRE System Library) widoczny jest drugi element, w którym będą znajdowały się biblioteki zewnętrzne (zależności)
+zarządzanie przez Mavena (Maven Dependencies)
+
+java -jar JarFIle.jar
+(wyskoczy błąd informujący o tym, że klasa z metodą main nie została wskazana w manifeście)
+
+dlatego odpalamy za pomocą tej komendy:
+java -cp JarFile.jar package.Classname (kiedy nie ustalono, która klasa jest mainem)
+
+Pluginy:
+Druga rzecz, zaraz po zarządzaniu zależnościami, która daje Mavenowi tak dużą popularność są pluginy.
+Są to rozszerzenia, które pozwalają robić dużo więcej niż tylko kompilować, czy pakować aplikację. Wśród pluginów znajdziemy wtyczki:
+
+uruchamiające testy jednostkowe, czy integracyjne
+generującą automatycznie javadoc na podstawie komentarzy
+generującą dokumentację w formacie PDF
+i wiele więcej
+Dla pluginów dodajmy wpis <plugins></plugins> w sekcji <build>
+
+
+Zad1.: Utworzyc projekt np. CapitalizerTest i korzystajac z informacji z dzisiejszej lekcji uzyc w srodku tego projektu klasy Capitalizer
+Zad2.: Poczytac co to jest piramida testow, czym sie rozni test jednostkowy od integracyjnego, jakie bilioteki uzywamy w javie do testow jednostkowych oraz co to jest mock :P
+
+
+
+Testy jednostkowe
+Test jednostkowy to kawałek kodu który sprawdza czy znane, stałe dane wejściowe produkują znany stały wynik.
+Testujemy tylko metody publiczne - dla wartości standardowych (znanych), skrajnych (granicznych) – nie testujemy dla wartości przesadzonych
+(które prawdopodobnie nigdy nie będą użyte) oraz testujemy na okoliczność rzucania wyjątków.
+
+Czym są wspomniane Asserty (Asercje)?
+Za pomocą asercji sprawdzamy, czy wartość zwrócona przez metodę jest taka, jak się spodziewamy. Metody klasy Assert rzucają Errory - AssertionFailedError,
+jeżeli wartość oczekiwana jest niezgodna z wartością wynikową – wtedy test zakończony jest porażką. Jeżeli Error nie został rzucony to test jest zaliczony.
+Korzystanie z Asercji jest bardzo pomocne ponieważ po wyrzuceniu AssertionFailedError będziemy mieli informację jaki wynik był spodziewany,
+a jaki otrzymaliśmy faktycznie.
+
+Niezależność testów jednostkowych
+Testy jednostkowe muszą być niezależne od siebie. Czyli to co wyniknęło z wywołania metody testowanej w pierwszym teście, nie może być elementem drugiego testu.
+JUnit przy uruchamianiu pojedynczego testu zawsze tworzy nową instancję danej klasy testowej:
+
+
+Stworz klase Employee(name, surname, pesel, salary, position, city)
+Stworz klase EmployeeService w ktorej kazda z metod pobiera liste emplowow jako argument :
+1) zwraca pracowwnika co najwiecej zarabia lub rzuca wyjątek jeżeli takiego nie znajdzie
+2) zwraca pracownika co najwiecej zarabia w podanym jako 2gi argument miescie - lub rzuca wyjatek jesli nie ma zadnego pracownika w danym miescie
+3) zwraca miasto w ktorym jest najwiecej pracownikow
+4) zwraca srednia pensje pracownikow na podanym jako drugi argument stanowisku.
+Testy jednostkowe na wszystko.
+
+Dla chetnych:
+Sprobowac podpiac plugin jacoco, ktory wygeneruje raport o tym ile kodu jest przetestowane
