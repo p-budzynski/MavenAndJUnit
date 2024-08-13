@@ -78,3 +78,63 @@ Testy jednostkowe na wszystko.
 
 Dla chetnych:
 Sprobowac podpiac plugin jacoco, ktory wygeneruje raport o tym ile kodu jest przetestowane
+
+Odpalenie testów w projekcie spowoduje użycie JaCoCo agenta i utworzenie raportu jacoco.exec w
+formacie binarnym w pakiecie target oraz raportu w formie html o nazwie index.html.
+
+Analiza raportu:
+
+Trzy kluczowe wskaźniki:
+•	pokrycie linni (instrukcji) – odzwierciedla ilość kodu, która została wykonana poprzez wezwanie instrukcji kodu bajtowego za pomocą testów;
+•	pokrycie możliwych gałęzi (ify, elsy i kejsy ze switcha) – odzwierciedla ilość gałęzi , która została pokryta testami;
+•	złożoność cykliczna (cyclomatic complexity) – odzwierciedla złożoność kodu poprzez podanie liczby ścieżek potrzebnych do pokrycia wszystkich możliwych
+ścieżek w kodzie za pomocą kombinacji liniowej.
+
+Kolorowe diamenty dotyczą instrukcji warunkowych takich jak if, else oraz konstrukcji switch case
+•	czerwony diament – oznacza, że żadna z gałęzi nie została wykonana podczas testu;
+•	żółty diament – oznacza, że rozgałęzienia zostały częściowo pokryte testami;
+•	zielony diament – oznacza, że wszystkie gałęzie zostały pokryte testami.
+Kolor tła instrukcji – ma analogiczne znaczenie co kolor diamentu, ale dotyczy pokrycia testami pojedynczych instrukcji (linii kodu).
+
+Ustawiianie wymagalnego pokrycia kodu, tak zeby mvn verify(check) nam przeszedl:
+
+    <configuration>
+        <rules>
+            <rule>
+                <element>PACKAGE</element>
+                <limits>
+                    <limit>
+                        <counter>LINE</counter>
+                        <value>COVEREDRATIO</value>
+                        <minimum>0.80</minimum>
+                    </limit>
+                </limits>
+            </rule>
+        </rules>
+    </configuration>
+
+Jezeli z jakiegos powodu chcemy excludowac klase tak zeby nie byla mierzona(np klasa modelowa) to mozemy to rowniez ustawic:
+<configuration>
+    <excludes>
+        <exclude>**/*pl/kurs/app/*</exclude>
+        <exclude>**/*pl/kurs/homework/app/*</exclude>
+        <exclude>**/*pl/kurs/homework/model/Employee.class</exclude>
+    </excludes>
+</configuration>
+
+Gdzie "*" to kazdy pakiet/rozszerzenie/typ
+
+Praca domowa:
+* W EmployeeService z Tematu nr1 z rozszerzenia dodać JaCoCo i sprawdzić w jakim stopniu przetestowany jest kod.
+* Zmień domyślny folder generowania się raportu na “target/jacoco”,
+* Ustaw współczynniki na:
+    - linie na 80 %
+    - branche na 80%
+    - metody na 100%
+    - klasy na 100%
+
+
+Streams:
+Wynieść metody z runnerow do serwisow np. pl.kurs.homework.task2.app.Main#main do osobnego serwisu - jakby sie nudzilo
+
+BAZY DANYCH!!!!!

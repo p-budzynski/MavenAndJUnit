@@ -2,11 +2,14 @@ package pl.kurs.homework.service;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import pl.kurs.homework.exception.NotUniqueResultException;
 import pl.kurs.homework.model.Employee;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -39,6 +42,8 @@ public class EmployeeServiceTest {
                 new Employee("Sylwia", "Stępień", "88020256786", 4900.0, "Tester", "Warszawa"));
     }
 
+
+
     @Test
     void shouldReturnHighestEarningEmployee() throws NotUniqueResultException {
         //when
@@ -48,10 +53,11 @@ public class EmployeeServiceTest {
         assertThat(earningEmployee.getSalary()).isEqualTo(6300.0);
     }
 
-    @Test
-    void shouldThrowExceptionForEmptyListPassedToMethodReturningHighestEarningEmployee() {
+    @ParameterizedTest
+    @MethodSource("provideEmptyEmployeesCollections")
+    void shouldThrowExceptionForEmptyListOrNullOnMethodReturningHighestEarningEmployee(List<Employee> employees) {
         //when then
-        assertThatThrownBy(() -> employeeService.returnHighestEarningEmployee(null))
+        assertThatThrownBy(() -> employeeService.returnHighestEarningEmployee(employees))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Employee list cannot be null or empty.");
     }
@@ -78,10 +84,11 @@ public class EmployeeServiceTest {
         assertThat(earningEmployee.getName()).isEqualTo("Izabela");
     }
 
-    @Test
-    void shouldThrowExceptionForEmptyListPassedToMethodReturningHighestEarningEmployeeFromCity() {
+    @ParameterizedTest
+    @MethodSource("provideEmptyEmployeesCollections")
+    void shouldThrowExceptionForEmptyListOrNullOnMethodReturningHighestEarningEmployeeFromCity(List<Employee> employees) {
         //when then
-        assertThatThrownBy(() -> employeeService.returnHighestEarningEmployeeFromCity(null, "Warszawa"))
+        assertThatThrownBy(() -> employeeService.returnHighestEarningEmployeeFromCity(employees, "Warszawa"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Employee list cannot be null or empty.");
     }
@@ -116,10 +123,11 @@ public class EmployeeServiceTest {
         assertThat(cityWithMostEmployees).isEqualTo("Warszawa");
     }
 
-    @Test
-    void shouldThrowExceptionWhenPassedEmptyListToMethodCityWithMostEmployees() {
+    @ParameterizedTest
+    @MethodSource("provideEmptyEmployeesCollections")
+    void shouldThrowExceptionWhenPassedEmptyListOrNullOnMethodCityWithMostEmployees(List<Employee> employees) {
         //when then
-        assertThatThrownBy(() -> employeeService.returnCityWithMostEmployees(null))
+        assertThatThrownBy(() -> employeeService.returnCityWithMostEmployees(employees))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Employee list cannot be null or empty.");
     }
@@ -146,10 +154,11 @@ public class EmployeeServiceTest {
         assertThat(averageSalary).isEqualTo(4800.0);
     }
 
-    @Test
-    void shouldThrowExceptionWhenPassedEmptyListToMethodAverageSalaryForPosition() {
+    @ParameterizedTest
+    @MethodSource("provideEmptyEmployeesCollections")
+    void shouldThrowExceptionWhenPassedEmptyListOrNullOnMethodAverageSalaryForPosition(List<Employee> employees) {
         //when then
-        assertThatThrownBy(() -> employeeService.returnAverageSalaryForPosition(null, "Tester"))
+        assertThatThrownBy(() -> employeeService.returnAverageSalaryForPosition(employees, "Tester"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Employee list cannot be null or empty.");
     }
@@ -160,5 +169,9 @@ public class EmployeeServiceTest {
         assertThatThrownBy(() -> employeeService.returnAverageSalaryForPosition(employees, "Teacher"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("There are no employees from position: Teacher.");
+    }
+
+    private static Stream<List<Employee>> provideEmptyEmployeesCollections() {
+        return Stream.of(null, List.of());
     }
 }

@@ -12,10 +12,11 @@ public class EmployeeService {
         if (employees == null || employees.isEmpty()) {
             throw new IllegalArgumentException("Employee list cannot be null or empty.");
         }
-        Optional<Employee> highestEarningEmployee = employees.stream()
-                .max(Comparator.comparing(Employee::getSalary));
+        Employee highestEarningEmployee = employees.stream()
+                .max(Comparator.comparing(Employee::getSalary))
+                .get();
 
-        double highestSalary = highestEarningEmployee.get().getSalary();
+        double highestSalary = highestEarningEmployee.getSalary();
         long count = employees.stream()
                 .filter(employee -> employee.getSalary() == highestSalary)
                 .count();
@@ -24,7 +25,7 @@ public class EmployeeService {
             throw new NotUniqueResultException("More than one employee found with the highest salary.");
         }
 
-        return highestEarningEmployee.get();
+        return highestEarningEmployee;
     }
 
     public Employee returnHighestEarningEmployeeFromCity(List<Employee> employees, String city) throws NotUniqueResultException {
@@ -32,14 +33,13 @@ public class EmployeeService {
             throw new IllegalArgumentException("Employee list cannot be null or empty.");
         }
 
-        if (employees.stream()
-                .noneMatch(employee -> city.equalsIgnoreCase(employee.getCity()))) {
-            throw new IllegalArgumentException("There are no employees from city: " + city + ".");
-        }
-
         Optional<Employee> highestEarningEmployee = employees.stream()
                 .filter(employee -> employee.getCity().equalsIgnoreCase(city))
                 .max(Comparator.comparing(Employee::getSalary));
+
+        if (highestEarningEmployee.isEmpty()) {
+            throw new IllegalArgumentException("There are no employees from city: " + city + ".");
+        }
 
         double highestSalary = highestEarningEmployee.get().getSalary();
         long count = employees.stream()
@@ -84,15 +84,16 @@ public class EmployeeService {
             throw new IllegalArgumentException("Employee list cannot be null or empty.");
         }
 
-        if (employees.stream()
-                .noneMatch(employee -> position.equalsIgnoreCase(employee.getPosition()))) {
+        OptionalDouble averageSalary = employees.stream()
+                .filter(employee -> employee.getPosition().equalsIgnoreCase(position))
+                .mapToDouble(Employee::getSalary)
+                .average();
+
+        if (averageSalary.isPresent()) {
+            return averageSalary.getAsDouble();
+        } else {
             throw new IllegalArgumentException("There are no employees from position: " + position + ".");
         }
 
-        return employees.stream()
-                .filter(employee -> employee.getPosition().equalsIgnoreCase(position))
-                .mapToDouble(Employee::getSalary)
-                .average()
-                .orElse(0.0);
     }
 }
